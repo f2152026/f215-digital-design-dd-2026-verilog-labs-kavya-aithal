@@ -29,9 +29,50 @@ module cla4(
 
   wire p0, p1, p2, p3;
   wire g0, g1, g2, g3;
-  wire c1, c2, c3;
+  wire c1, c2, c3,c4;
+  wire t33, t43;
+    wire t22, t32, t42;
+    wire t11, t21, t31, t41;
+    wire t44;
+
 
   // TODO: your gate-level P/G, carry, and sum logic goes here.
   // (cout should be connected to c4.) Remember the delay on every gate.
+xor #(2) (p0, a[0], b[0]);
+xor #(2) (p1, a[1], b[1]);
+xor #(2) (p2, a[2], b[2]);
+xor #(2) (p3, a[3], b[3]);
+
+and #(2) (g0, a[0], b[0]);
+and #(2) (g1, a[1], b[1]);
+and #(2) (g2, a[2], b[2]);
+and #(2) (g3, a[3], b[3]);
+
+and #(2) (t11, p0,cin);
+and #(2) (t21, p1,t11);
+and #(2) (t31, p2,t21);
+and #(2) (t41, p3,t31);
+
+and #(2) (t22, p1,g0);
+and #(2) (t32, p2,t22);
+and #(2) (t42, p3,t32);
+
+and #(2) (t33, p2,g1);
+and #(2) (t43, p3,t33);
+
+and #(2) (t44, p3,g2);
+
+//starting with carry
+xor #(2)(c1,g0,t11);
+xor #(2)(c2,g1,t22, t21);
+xor #(2)(c3,g2,t33, t32, t31);
+xor #(2)(c4,g3,t44,t43, t42, t41);
+ assign cout = c4;
+
+//sum
+xor #(2) (sum[0], p0, cin);
+xor #(2) (sum[1], p1, c1);
+xor #(2) (sum[2], p2, c2);
+xor #(2) (sum[3], p3, c3);
 
 endmodule
